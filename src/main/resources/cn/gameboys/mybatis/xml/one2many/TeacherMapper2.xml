@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gameboys.mybatis.xml.one2many.TeacherMapper2">
+	<!--按结果嵌套查询 -->
+	<select id="getTeacher" resultMap="TeacherStudent">
+		select s.id sid,s.name sname,t.name tname,t.id tid
+		from student s,teacher t
+		where s.tid=t.id and t.id = #{tid}
+	</select>
+	<resultMap id="TeacherStudent" type="cn.gameboys.mybatis.xml.one2many.Teacher2">
+		<result property="id" column="tid" />
+		<result property="name" column="tname" />
+		<!--复杂的属性，我们需要单独处理 对象：association 集合：collection javaType="" 指定属性的类型 集合中的泛型信息，我们使用ofType获取 -->
+		<collection property="students" ofType="cn.gameboys.mybatis.xml.one2many.Student2">
+			<result property="id" column="sid" />
+			<result property="name" column="sname" />
+			<result property="tid" column="tid" />
+		</collection>
+	</resultMap>
+	<!--======================================================================= -->
+
+	<select id="getTeacher2" resultMap="TeacherStudent2">
+		select * from mybatis.teacher where id = #{tid}
+	</select>
+	<resultMap id="TeacherStudent2" type="cn.gameboys.mybatis.xml.one2many.Teacher2">
+		<collection property="students" javaType="ArrayList"
+			ofType="cn.gameboys.mybatis.xml.one2many.Student2" select="getStudentByTeacherId" column="id" />
+	</resultMap>
+
+	<select id="getStudentByTeacherId" resultType="cn.gameboys.mybatis.xml.one2many.Student2">
+		select * from mybatis.student where tid = #{tid}
+	</select>
+
+
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--configuration核心配置文件 -->
+<configuration>
+
+	<properties resource="jdbc.properties" />
+
+
+
+	<!--标准日志工厂实现 -->
+	<!-- <settings> <setting name="logImpl" value="STDOUT_LOGGING"/> </settings> -->
+	<settings>
+		<setting name="logImpl" value="LOG4J" />
+		<!--是否开启自动驼峰命名规则（camel case）映射 -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+
+
+	<!--可以给实体类起别名 -->
+<!-- 	<typeAliases>
+		<typeAlias type="cn.gameboys.mybatis.xml.base.User" alias="User" />
+	</typeAliases> -->
+
+	<!--可以给实体类起别名 直接设置包名 -->
+	 <typeAliases> <package name="cn.gameboys.mybatis.xml.base" /> </typeAliases> 
+
+
+
+
+	<typeHandlers>
+		<typeHandler handler="cn.gameboys.mybatis.xml.typehandler.ExampleTypeHandler" />
+	</typeHandlers>
+
+
+
+
+
+	<!--environments配置环境组 -->
+	<!--default默认环境 -->
+	<environments default="development">
+		<!--environment单个环境 -->
+		<environment id="development">
+			<!--transactionManager配置事务管理器 -->
+			<transactionManager type="JDBC" />
+			<!--配置连接池 -->
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driver}" />
+				<property name="url" value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+
+
+	<!--每一个Mapper.XML都需要在mybatis核心配置文件中注册 -->
+	<mappers>
+		<mapper resource="cn/gameboys/mybatis/xml/base/UserMapper.xml" />
+
+		<mapper class="cn.gameboys.mybatis.annotation.UserMapper" />
+
+
+
+		<!--测试typeHandler-->
+		<mapper class="cn.gameboys.mybatis.xml.typehandler.BlogMapper" />
+
+
+		<!--一对多查询，一对一查询 -->
+		<mapper class="cn.gameboys.mybatis.xml.one2many.StudentMapper" />
+		<mapper class="cn.gameboys.mybatis.xml.one2many.TeacherMapper" />
+		<mapper class="cn.gameboys.mybatis.xml.one2many.TeacherMapper2" />
+
+
+		<!--if测试 -->
+		<mapper class="cn.gameboys.mybatis.xml.iftest.BlogMapper" />
+
+
+		<!--缓存测试 -->
+		<mapper class="cn.gameboys.mybatis.xml.cache.UserMapper" />
+
+	</mappers>
+
+</configuration>
